@@ -1,0 +1,132 @@
+{
+  "id": "com.ruodao.flagship-router",
+  "name": "FlagshipRouter 免费模型网关",
+  "version": "1.0.1",
+  "apiVersion": ">=0.1.0 <0.2.0",
+  "description": "本地部署 FlagshipRouter（基于 9router 的 OpenAI 兼容网关），聚合多家免费模型：一键下载构建、自动启动、自动生成 API Key，并把模型注册进若道 Agent，即刻可用。",
+  "requires": {
+    "capabilities": {
+      "required": {
+        "commands": "0.1.0",
+        "code.execute": "0.1.0"
+      }
+    }
+  },
+  "permissions": [
+    "network",
+    "process"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "com.ruodao.flagship-router.install",
+        "title": "一键安装（下载源码并构建）",
+        "description": "后台下载 FlagshipRouter 源码 → 安装依赖 → 构建网关（Next.js）。构建耗时约 2–8 分钟，关闭界面不中断，用「查询安装进度」查看。支持本地源码/ZIP 与镜像加速。",
+        "runOnSubmit": false,
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "install"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.install-status",
+        "title": "查询安装进度",
+        "description": "轮询一键安装后台任务：当前阶段、逐条日志、成功或失败原因。状态文件持久化，重启后仍可查询。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "install-status"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.status",
+        "title": "网关状态",
+        "description": "查看安装版本、运行端口、控制台地址、Node 版本兼容性与安装状态。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "status"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.start",
+        "title": "启动网关",
+        "description": "启动本地网关（默认 127.0.0.1:20128，端口占用时自动换空闲端口），并自动创建/校验 API Key。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "start"],
+          "cwd": ".",
+          "timeoutMs": 180000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.stop",
+        "title": "停止网关",
+        "description": "停止本地网关进程，不影响已安装的构建产物与配置。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "stop"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.models",
+        "title": "模型清单",
+        "description": "拉取网关可用文本模型（合并 /v1/models 与后台 catalog 的就绪状态与上下文窗口），未运行时自动拉起。用于工作台选择要接入 Agent 的模型。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "models"],
+          "cwd": ".",
+          "timeoutMs": 120000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.doctor",
+        "title": "环境自检",
+        "description": "逐项检查 Node 版本、安装状态、网关连通性、API Key 有效性与模型数量，不产生费用。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "doctor"],
+          "cwd": ".",
+          "timeoutMs": 60000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.uninstall",
+        "title": "卸载网关",
+        "description": "停止网关并删除构建产物；stdin 传 { purge: true } 时连同数据目录（含密钥、日志）一起删除。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "uninstall"],
+          "cwd": ".",
+          "timeoutMs": 120000
+        }
+      },
+      {
+        "id": "com.ruodao.flagship-router.log",
+        "title": "查看日志",
+        "description": "返回安装日志与网关运行日志的末尾内容，用于排障。",
+        "action": {
+          "type": "process",
+          "command": "node",
+          "args": ["bin/flagship-router.mjs", "log"],
+          "cwd": ".",
+          "timeoutMs": 30000
+        }
+      }
+    ]
+  }
+}

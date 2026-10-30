@@ -1,0 +1,16 @@
+{
+  "route": "flagship-router",
+  "label": "免费模型网关",
+  "description": "FlagshipRouter 本地网关插件：一键装好 OpenAI 兼容免费模型网关，自动启动并接入若道 Agent，模型列表即选即用。",
+  "icon": "Route",
+  "version": "1.0.1",
+  "author": "Ruodao",
+  "capabilities": ["commands", "code.execute"],
+  "configFields": [
+    { "key": "RUODAO_FLAGSHIP_PORT", "label": "网关端口（留空 = 20128，被占用自动换空闲端口）", "placeholder": "20128", "secret": false },
+    { "key": "RUODAO_FLAGSHIP_MIRROR", "label": "GitHub 加速镜像前缀（可选）", "placeholder": "https://gh-proxy.com", "secret": false },
+    { "key": "RUODAO_FLAGSHIP_SOURCE_ZIP", "label": "源码 ZIP 本地路径（可选，离线安装）", "placeholder": "D:\\Downloads\\FlagshipRouter-main.zip", "secret": false },
+    { "key": "RUODAO_FLAGSHIP_SOURCE_DIR", "label": "本地源码目录（可选，跳过下载）", "placeholder": "D:\\code\\FlagshipRouter", "secret": false },
+    { "key": "RUODAO_FLAGSHIP_API_KEY", "label": "手动指定网关 API Key（留空自动生成）", "placeholder": "sk-...", "secret": true }
+  ]
+}

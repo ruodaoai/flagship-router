@@ -1,0 +1,32 @@
+{
+  "displayName": "免费模型网关",
+  "slug": "flagship-router",
+  "summary": "把 FlagshipRouter（基于 9router 的本地 OpenAI 兼容免费模型网关）做成一键插件：自动下载构建、自动启动、自动生成 API Key，勾选模型后一键接入若道 Agent。端口冲突自动换、数据目录隔离，进程关闭界面也不中断。",
+  "description": "想让若道 Agent 用上免费模型，通常要自己拉源码、装依赖、构建、起服务、建 Key、再手填配置——每一步都能卡住人。这个插件把这六步收成三个按钮。\n\n【一键安装】\n后台下载上游源码 → 安装依赖 → 构建网关，进度随时可查，关掉界面也不中断；支持用本地 ZIP 或源码目录离线安装（内网 / 无法访问 GitHub 时用），也支持配置 GitHub 镜像加速。安装会自动补齐上游的 optionalDependencies（better-sqlite3 / @aws-sdk/credential-providers）——这两个模块在 next build 期间会被静态解析，缺一个就必然构建失败；装包时跳过原生编译，运行期由 Node 内置 node:sqlite / sql.js 兜底，所以不需要 Visual Studio C++ 工具链。构建失败重试会复用已装依赖，不必再等一遍 npm install。\n\n【自动启动 + 自动 Key】\n网关以独立进程运行（默认 127.0.0.1:20128，端口被占用自动换空闲端口），数据目录与桌面端隔离（~/.ruodao-flagship-router）。开启 REQUIRE_API_KEY 后，插件自动登录控制台创建「Ruodao Agent」Key 并校验，不需要你手动复制粘贴。\n\n【一键接入 Agent】\n拉取网关里的模型清单 → 勾选需要的 → 点「接入 Agent」，插件通过桌面端的 saveCustomModel 把网关注册成模型提供方（wire_api = responses，网关原生支持 /v1/responses），配置写进 config.toml，重启后依然可用。之后在对话里直接选这些模型就行。\n\n【自检与排障】\ndoctor 逐项检查 Node 版本 / 安装状态 / 连通性 / Key / 模型数量；log 返回安装与运行日志。卡在哪一步一眼能看到，不用翻终端。\n\n【配置项】\n端口（默认 20128）、GitHub 镜像前缀、离线源码 ZIP 或目录、手动指定 API Key 四项；密钥只落盘在数据目录，不进仓库、不上传。\n\n环境要求：Node.js ≥ 20.9（推荐 22 LTS）带 npm，无 npm 时插件会自动下载 npm 运行时；首次构建需要网络下载源码与依赖（约 60–150 MB）。仅供学习研究，请遵守上游项目（MIT）与各模型提供方的服务条款。",
+  "author": "Ruodao",
+  "category": "Utilities",
+  "tags": [
+    "免费模型",
+    "网关",
+    "OpenAI兼容",
+    "9router",
+    "FlagshipRouter",
+    "Agent",
+    "模型接入"
+  ],
+  "version": "1.0.1",
+  "repositoryUrl": "https://github.com/theRizwan/FlagshipRouter",
+  "sourceRef": "",
+  "pluginPath": "",
+  "permissions": [
+    "network",
+    "process"
+  ],
+  "capabilities": [
+    "commands",
+    "code.execute"
+  ],
+  "hasMcpServers": false,
+  "hasSkills": false,
+  "readme": "# FlagshipRouter 免费模型网关（若道桌面端插件）\n\n把 [FlagshipRouter](https://github.com/theRizwan/FlagshipRouter)（基于 9router 的本地 OpenAI 兼容网关/控制台）做成若道桌面端功能插件：市场下载安装后，一键装好本地网关，自动启动、自动生成 API Key，并把里面的免费模型**一键接入若道 Agent**，在对话里直接选用。\n\n## 特性\n\n- **一键安装**：后台下载上游源码 → 安装依赖 → 构建网关（支持本地 ZIP/源码目录离线安装、GitHub 镜像加速），关闭界面不中断，进度可查。\n- **自动启动**：网关以独立进程运行（默认 `127.0.0.1:20128`，端口被占用自动换空闲端口），数据目录与若道桌面端隔离。\n- **自动 API Key**：设置 `REQUIRE_API_KEY` 后自动登录控制台创建「Ruodao Agent」Key 并校验，无需手动操作。\n- **一键接入 Agent**：在工作台勾选模型后，通过桌面端 `saveCustomModel` 把网关注册为模型提供方（`wire_api = \"responses\"`，网关原生支持 `/v1/responses`），配置持久化到 `config.toml`，重启后仍可用。\n- **自检与排障**：doctor 逐项检查 Node 版本 / 安装 / 连通性 / Key / 模型数；log 返回安装与运行日志。\n\n## 使用流程\n\n1. 在若道桌面端「插件」页导入本插件（或从市场安装）。\n2. 打开侧边栏「免费模型网关」工作台，点击 **一键安装**（首次约 2–8 分钟，可用「查询安装进度」轮询）。\n3. 安装完成后点击 **启动网关**，然后 **拉取模型**，勾选需要的模型。\n4. 点击 **接入 Agent**——模型即刻出现在若道 Agent 的模型列表中。\n5. 控制台（可选）：浏览器打开 `http://127.0.0.1:20128`，密码在状态卡片中展示，可自行添加上游账号与模型。\n\n## 配置项\n\n| Key | 说明 |\n| --- | --- |\n| `RUODAO_FLAGSHIP_PORT` | 网关端口，默认 20128 |\n| `RUODAO_FLAGSHIP_MIRROR` | GitHub 加速镜像前缀，如 `https://gh-proxy.com` |\n| `RUODAO_FLAGSHIP_SOURCE_ZIP` | 离线安装：源码 ZIP 本地路径 |\n| `RUODAO_FLAGSHIP_SOURCE_DIR` | 离线安装：本地源码目录 |\n| `RUODAO_FLAGSHIP_API_KEY` | 手动指定网关 API Key（留空自动生成） |\n\n数据目录：`~/.ruodao-flagship-router`（可用环境变量 `RUODAO_FLAGSHIP_HOME` 覆盖）。密钥只落盘在数据目录，不进仓库。"
+}

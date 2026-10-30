@@ -1,0 +1,10 @@
+{
+  "name": "flagship-router",
+  "displayName": "FlagshipRouter 免费模型网关",
+  "version": "1.0.1",
+  "description": "本地免费模型网关：一键安装 FlagshipRouter（OpenAI 兼容），自动拉起服务、生成 API Key，并把可用模型一键接入若道 Agent。",
+  "author": {
+    "name": "Ruodao"
+  },
+  "ui": "./ui.json"
+}
